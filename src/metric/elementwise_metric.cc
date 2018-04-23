@@ -187,6 +187,23 @@ struct EvalTweedieNLogLik: public EvalEWiseBase<EvalTweedieNLogLik> {
   bst_float rho_;
 };
 
+
+struct EvalNoOp : public Metric {
+  const char* Name() const override {
+    return "noop";
+  }
+  bst_float Eval(const std::vector<bst_float> &preds,
+                 const MetaInfo &info,
+                 bool distributed) const override {
+    return 0;
+  }
+  // used to store error message
+  const char *error_msg_;
+};
+XGBOOST_REGISTER_METRIC(NoOp, "noop")
+.describe("NoOp Metric.")
+.set_body([](const char* param) { return new EvalNoOp(); });
+
 XGBOOST_REGISTER_METRIC(RMSE, "rmse")
 .describe("Rooted mean square error.")
 .set_body([](const char* param) { return new EvalRMSE(); });
